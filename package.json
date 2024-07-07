@@ -14,7 +14,8 @@
     "ts-jest": "^29.1.5"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node server.js",
+    "test": "jest"
   },
   "name": "users_organisations_api",
   "version": "1.0.0",
