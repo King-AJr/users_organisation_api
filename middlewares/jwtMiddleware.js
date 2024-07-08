@@ -2,7 +2,6 @@ require('dotenv').config(); // Ensure this line is at the top of your entry file
 
 const jwt = require('jsonwebtoken');
 
-const prisma = require('../db/prisma');
 const getTokenFromHeader = require('../utils/getTokenFromHeader');
 
 /**

@@ -1,9 +1,11 @@
 const bcrypt = require("bcrypt");
-const prisma = require('../db/prisma');
+const { getRepository } = require("typeorm");
 const checkEmailExists = require('../utils/checkEmailExist');
 const createToken = require('../utils/createToken');
 const { emptyFieldsValidate, isItString } = require('../utils/emptyFields');
 const isEmail = require('../utils/validateEmail');
+const User = require("../db/entity/User");
+const organisation = require("../db/entity/organisations");
 
 /**
  * Registers a new user
@@ -47,29 +49,28 @@ const registerUserService = async (userData) => {
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  // Create new user and associate with the organisation
-  const newUser = await prisma.User.create({
-    data: {
-      lastName,
-      firstName,
-      email,
-      password: hashedPassword,
-      phone,
-      organisations: {
-        create: {
-          organisation: {
-            create: {
-              name: `${firstName} Organisation`,
-              description: `${firstName} Organisation`,
-            }
-          }
-        }
-      }
-    },
-    include: {
-      organisations: true,
-    }
+  const userRepository = getRepository(User);
+  const organisationRepository = getRepository(organisation);
+
+  // Create new organisation
+  const newOrganisation = organisationRepository.create({
+    name: `${firstName} Organisation`,
+    description: `${firstName} Organisation`
   });
+
+  await organisationRepository.save(newOrganisation);
+
+  // Create new user and associate with the organisation
+  const newUser = userRepository.create({
+    lastName,
+    firstName,
+    email,
+    password: hashedPassword,
+    phone,
+    organisations: [newOrganisation]
+  });
+
+  await userRepository.save(newUser);
 
   console.log(newUser);
 

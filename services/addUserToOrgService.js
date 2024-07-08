@@ -1,7 +1,3 @@
-// organisationService.js
-
-const prisma = require('../db/prisma');
-
 /**
  * Add a user to an organisation
  * @param {number} userId - ID of the user to add

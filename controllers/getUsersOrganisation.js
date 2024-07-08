@@ -1,4 +1,4 @@
-const prisma = require('../db/prisma');
+
 
 /**
  * Get all organizations where the user is a member

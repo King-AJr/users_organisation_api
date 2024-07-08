@@ -1,4 +1,3 @@
-const prisma = require('../db/prisma');
 const addUserToOrgService = require('../services/addUserToOrgService');
 
 

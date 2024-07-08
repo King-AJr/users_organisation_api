@@ -1,18 +1,17 @@
-const prisma = require('../db/prisma')
+const { getRepository } = require("typeorm");
+const User = require("../db/entity/User");
 
 const checkEmailExists = async (email, full) => {
     try {
-        const user = await prisma.User.findFirst({
-            where: {
-                email: email
-            }
-        });
+        const userRepository = getRepository(User);
+
+        const user = await userRepository.findOne({ where: { email } });
 
         if (full) {
             return user;
         }
 
-        return !!user; // Converts user object to boolean (true if user exists, false if null)
+        return !!user; 
     } catch (error) {
         console.error('Error checking email:', error);
         return false;

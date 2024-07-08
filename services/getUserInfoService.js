@@ -1,4 +1,4 @@
-const prisma = require('../db/prisma');
+
 
 /**
  * Get user information if they are in the same organisation as the requesting user

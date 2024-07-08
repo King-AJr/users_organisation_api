@@ -1,6 +1,4 @@
-// organisationService.js
 
-const prisma = require('../db/prisma');
 const { emptyFieldsValidate, isItString } = require('../utils/emptyFields');
 
 /**
