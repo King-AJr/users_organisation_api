@@ -67,7 +67,7 @@ const registerUserService = async (userData) => {
       email,
       password: hashedPassword,
       phone,
-      orgIds: [newOrgId]
+      orgIds: [parseInt(newOrgId)]
     }
   });
 
