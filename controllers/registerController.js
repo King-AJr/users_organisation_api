@@ -23,7 +23,8 @@ const registerUser = async (req, res) => {
         res.status(422).json({
           status: "Bad request",
           message: "Registration unsuccessful",
-          statusCode: 400,
+          statusCode: 422,
+          error: error.message
         });
       }
 };

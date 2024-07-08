@@ -37,7 +37,8 @@ const getUserOrganizations = async (req, res) => {
         res.status(500).json({
             status: "Internal Server Error",
             message: "An error occurred while retrieving organizations",
-            statusCode: 500
+            statusCode: 500,
+            error: error.message
         });
     }
 };
