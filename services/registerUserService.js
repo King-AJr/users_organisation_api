@@ -47,16 +47,6 @@ const registerUserService = async (userData) => {
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  // Create new organisation
-  const newOrganisation = await prisma.organisation.create({
-    data: {
-      name: `${firstName} Organisation`,
-      description: `${firstName} Organisation`,
-    }
-  });
-
-  console.log(newOrganisation);
-
   // Create new user and associate with the organisation
   const newUser = await prisma.User.create({
     data: {
@@ -65,15 +55,20 @@ const registerUserService = async (userData) => {
       email,
       password: hashedPassword,
       phone,
-      organisation: {
+      organisations: {
         create: {
           organisation: {
-            connect: { orgId: newOrganisation.orgId }
+            create: {
+              name: `${firstName} Organisation`,
+              description: `${firstName} Organisation`,
+            }
           }
         }
       }
     },
-    include: { organisations: true }
+    include: {
+      organisations: true,
+    }
   });
 
   console.log(newUser);
