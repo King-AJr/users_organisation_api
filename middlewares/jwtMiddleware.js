@@ -1,7 +1,9 @@
 require('dotenv').config(); // Ensure this line is at the top of your entry file
 
 const jwt = require('jsonwebtoken');
+
 const prisma = require('../db/prisma');
+const getTokenFromHeader = require('../utils/getTokenFromHeader');
 
 /**
  * Middleware to authenticate token
@@ -12,8 +14,9 @@ const prisma = require('../db/prisma');
  */
 const authenticateToken = async (req, res, next) => {
     // Extract token from headers
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const authHeader = req.headers['authorization'] || req.headers['Authorization'];
+    const token = getTokenFromHeader(authHeader);
+
 
     if (!token) {
         return res.status(401).json({

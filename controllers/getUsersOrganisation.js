@@ -9,29 +9,35 @@ const getUserOrganizations = async (req, res) => {
     const userId = req.user.userId;
 
     try {
-        const userOrganizations = await prisma.UserOrganisation.findMany({
-            where: {
-                userId: userId
-            },
-            include: {
-                organisation: true
-            }
+        // Retrieve the user's organisations
+        const user = await prisma.user.findUnique({
+            where: { userId: userId },
+            select: { organisations: true },
         });
 
-        console.log("userOrganizations: ", userOrganizations);
+        if (!user) {
+            return res.status(404).json({
+                status: "Not Found",
+                message: "User not found",
+                statusCode: 404
+            });
+        }
 
-        const organizations = userOrganizations.map(userOrg => userOrg.organisation);
+        // Retrieve organisation details for the user's organisations
+        const organisations = await prisma.organisation.findMany({
+            where: { orgId: { in: user.organisations } },
+        });
 
         res.status(200).json({
             status: "Success",
             message: "Organizations retrieved successfully",
-            data: organizations
+            data: organisations
         });
     } catch (error) {
-        res.status(400).json({
-            "status": "Bad Request",
-            "message": "Client error",
-            "statusCode": 400
+        res.status(500).json({
+            status: "Internal Server Error",
+            message: "An error occurred while retrieving organizations",
+            statusCode: 500
         });
     }
 };

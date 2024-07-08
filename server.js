@@ -26,4 +26,6 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Ooops that endpoint does not exist' });
 });
 
-app.listen(port,()=> console.log(`Database connected successfully and app listening on port ${port}`))
+app.listen(port,()=> console.log(`Database connected successfully and app listening on port ${port}`));
+
+module.exports = app;
