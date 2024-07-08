@@ -67,7 +67,7 @@ const registerUserService = async (userData) => {
       phone,
       organisations: {
         create: {
-          organisation: {
+          Organisation: {
             connect: { orgId: newOrganisation.orgId }
           }
         }
