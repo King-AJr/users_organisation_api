@@ -39,17 +39,17 @@ const addUserToOrgService = async (userId, orgId, requesterUserId) => {
     }
 
     // Check if the requesting user is part of the organisation
-    if (!reqUser.orgIds.includes(parseInt(orgId))) {
+    if (!reqUser.organisation.includes(parseInt(orgId))) {
       throw new Error("Requesting user is not part of this organisation");
     }
 
     // Append the new user ID to the organisation's users array
-    const updatedOrganisations = [...user.orgIds, parseInt(orgId)];
+    const updatedOrganisations = [...user.organisation, parseInt(orgId)];
 
-    // Update the user with the new orgIds array
+    // Update the user with the new organisation array
     await prisma.User.update({
       where: { userId: parseInt(userId) },
-      data: { orgIds: { set: updatedOrganisations } },
+      data: { organisation: { set: updatedOrganisations } },
     });
 
     return true;

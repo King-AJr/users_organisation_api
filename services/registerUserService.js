@@ -67,11 +67,11 @@ const registerUserService = async (userData) => {
       email,
       password: hashedPassword,
       phone,
-      orgIds: [parseInt(newOrgId)]
+      organisation: [parseInt(newOrgId)]
     }
   });
 
-  console.log(newUser.orgIds, newOrganisation);
+  console.log(newUser.organisation, newOrganisation);
 
   const token = createToken(newUser);
 

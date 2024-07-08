@@ -5,11 +5,11 @@ const getSingleOrganisationService = async (userId, organisationId) => {
     const requester = await prisma.user.findUnique({
       where: { userId },
       select: {
-        orgIds: true,
+        organisation: true,
       },
     });
 
-    if (!requester || !requester.orgIds.includes(organisationId)) {
+    if (!requester || !requester.organisation.includes(organisationId)) {
       return null;
     }
 

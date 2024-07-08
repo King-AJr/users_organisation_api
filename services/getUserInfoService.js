@@ -18,7 +18,7 @@ const getUserInfoService = async (userId, requestingUserId) => {
         lastName: true,
         email: true,
         phone: true,
-        orgIds: true,
+        organisation: true,
       },
     });
 
@@ -30,7 +30,7 @@ const getUserInfoService = async (userId, requestingUserId) => {
     const requester = await prisma.User.findUnique({
       where: { userId: requestingUserId },
       select: {
-        orgIds: true,
+        organisation: true,
       },
     });
 
@@ -39,7 +39,7 @@ const getUserInfoService = async (userId, requestingUserId) => {
     }
 
     // Check for any overlapping organizations
-    const isSameOrg = user.orgIds.some(orgId => requester.orgIds.includes(orgId));
+    const isSameOrg = user.organisation.some(orgId => requester.organisation.includes(orgId));
 
     if (!isSameOrg) {
       throw new Error('Access denied: Users are not in the same organization');
