@@ -7,6 +7,7 @@ dotenv.config();
 const emptyFieldsValidate = require('../utils/emptyFields');
 const checkEmailExists = require('../utils/checkEmailExist');
 const prisma = require('../db/prisma');
+const isEmail = require('../utils/validateEmail')
 
 
 /**
@@ -28,10 +29,17 @@ const registerUser = async (req, res) => {
 
     const validationResult = emptyFieldsValidate(fieldsToValidate);
 
-    if (!validationResult) {
-        return res.status(422).json({
-            errors: validationResult
-        });
+    const EMAIL_REGEX =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const valid_email = isEmail(email);
+
+    if (!validationResult || !valid_email) {
+        return res.status(400).json(
+            {
+                "status": "Bad request",
+                "message": "Registration unsuccessful",
+                "statusCode": 400
+            }
+        )
     }
 
     try {
@@ -84,7 +92,7 @@ const registerUser = async (req, res) => {
               userId: newUser.userId
             },
             process.env.APP_SECRET,
-            { expiresIn: "3 days" }
+            { expiresIn: "1 minute" }
           );
 
 

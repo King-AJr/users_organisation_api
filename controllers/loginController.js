@@ -31,7 +31,7 @@ const userInfo = await checkEmailExists(email, true);
                 userId: userInfo.userId
                 },
                 process.env.APP_SECRET,
-                { expiresIn: "3 days" }
+                { expiresIn: "1 minute" }
                 );
         
 
