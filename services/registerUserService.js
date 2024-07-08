@@ -1,5 +1,3 @@
-// services/userService.js
-
 const bcrypt = require("bcrypt");
 const prisma = require('../db/prisma');
 const checkEmailExists = require('../utils/checkEmailExist');
@@ -57,9 +55,7 @@ const registerUserService = async (userData) => {
     }
   });
 
-  let newOrgId = newOrganisation.orgId;
-
-  // Create new user
+  // Create new user and associate with the organisation
   const newUser = await prisma.User.create({
     data: {
       lastName,
@@ -67,11 +63,18 @@ const registerUserService = async (userData) => {
       email,
       password: hashedPassword,
       phone,
-      organisation: [parseInt(newOrgId)]
-    }
+      organisations: {
+        create: {
+          organisation: {
+            connect: { orgId: newOrganisation.orgId }
+          }
+        }
+      }
+    },
+    include: { organisations: true }
   });
 
-  console.log(newUser.organisation, newOrganisation);
+  console.log(newUser.organisations, newOrganisation);
 
   const token = createToken(newUser);
 

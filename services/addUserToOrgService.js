@@ -39,7 +39,7 @@ const addUserToOrgService = async (userId, orgId, requesterUserId) => {
     }
 
     // Check if the requesting user is part of the organisation
-    if (!reqUser.organisation.includes(parseInt(orgId))) {
+    if (!reqUser.organisation.includes(orgId.toString())) {
       throw new Error("Requesting user is not part of this organisation");
     }
 

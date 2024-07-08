@@ -9,7 +9,7 @@ const getSingleOrganisationService = async (userId, organisationId) => {
       },
     });
 
-    if (!requester || !requester.organisation.includes(organisationId)) {
+    if (!requester || !requester.organisation.includes(organisationId.toString())) {
       return null;
     }
 

@@ -6,7 +6,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "organisations" INTEGER[],
+    "organisation" INTEGER[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("userId")
 );
