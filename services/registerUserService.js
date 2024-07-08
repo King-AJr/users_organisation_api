@@ -48,7 +48,7 @@ const registerUserService = async (userData) => {
   const hashedPassword = await bcrypt.hash(password, 12);
 
   // Create new organisation
-  const newOrganisation = await prisma.organisation.create({
+  const newOrganisation = await prisma.Organisation.create({
     data: {
       name: `${firstName} Organisation`,
       description: `${firstName} Organisation`,
