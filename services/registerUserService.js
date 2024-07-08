@@ -65,9 +65,6 @@ const registerUserService = async (userData) => {
           }
         }
       }
-    },
-    include: {
-      organisations: true,
     }
   });
 
