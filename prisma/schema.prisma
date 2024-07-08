@@ -26,7 +26,7 @@ generator client {
   organisations  UserOrganisation[] 
  }
 
-model organisation {
+model Organisation {
   orgId          Int                @id @default(autoincrement())
   name           String
   description    String
@@ -37,7 +37,7 @@ model UserOrganisation {
   userId         Int
   orgId          Int
   user           User               @relation(fields: [userId], references: [userId])
-  organisation   organisation       @relation(fields: [orgId], references: [orgId])
+  organisation   Organisation       @relation(fields: [orgId], references: [orgId])
 
   @@id([userId, orgId])
 }
