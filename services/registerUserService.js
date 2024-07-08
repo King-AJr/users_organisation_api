@@ -56,7 +56,7 @@ const registerUserService = async (userData) => {
   });
 
   // Create new user and associate with the organisation
-  const newUser = await prisma.user.create({
+  const newUser = await prisma.User.create({
     data: {
       lastName,
       firstName,
