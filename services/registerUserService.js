@@ -57,6 +57,8 @@ const registerUserService = async (userData) => {
     }
   });
 
+  let newOrgId = newOrganisation.orgId;
+
   // Create new user
   const newUser = await prisma.User.create({
     data: {
@@ -65,9 +67,11 @@ const registerUserService = async (userData) => {
       email,
       password: hashedPassword,
       phone,
-      organisations: [newOrganisation.orgId]
+      organisations: [newOrgId]
     }
   });
+
+  console.log(newUser.organisations, newOrganisation);
 
   const token = createToken(newUser);
 
