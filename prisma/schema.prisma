@@ -23,7 +23,7 @@ generator client {
   email         String   @unique
   password      String
   phone         String
-  organisations Int[]
+  orgIds        Int[]
 }
 
 model organisation {
