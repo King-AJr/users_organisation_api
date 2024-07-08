@@ -23,21 +23,21 @@ generator client {
   email          String             @unique
   password       String
   phone          String
-  organisations  UserOrganisation[] 
+  organisations  userOrganisation[] 
  }
 
-model Organisation {
+model organisation {
   orgId          Int                @id @default(autoincrement())
   name           String
   description    String
-  users          UserOrganisation[] 
+  users          userOrganisation[] 
 }
 
-model UserOrganisation {
+model userOrganisation {
   userId         Int
   orgId          Int
   user           User               @relation(fields: [userId], references: [userId])
-  organisation   Organisation       @relation(fields: [orgId], references: [orgId])
+  organisation   organisation       @relation(fields: [orgId], references: [orgId])
 
   @@id([userId, orgId])
 }
