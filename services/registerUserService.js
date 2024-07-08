@@ -65,7 +65,7 @@ const registerUserService = async (userData) => {
       email,
       password: hashedPassword,
       phone,
-      organisations: {
+      organisation: {
         create: {
           organisation: {
             connect: { orgId: newOrganisation.orgId }
