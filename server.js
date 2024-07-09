@@ -19,6 +19,10 @@ const PORT = process.env.PORT || 3005;
 
 initializeDatabase().then(() => {
     console.log("Connected to the database!");
+
+    app.get("/", (req, res) => {
+      res.send("Hello World!");
+    })
   
     app.use(cors());
     app.use(bodyParser.json());

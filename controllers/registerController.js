@@ -20,13 +20,18 @@ const registerUser = async (req, res) => {
           },
         });
       } catch (error) {
-        res.status(422).json({
-          status: "Bad request",
-          message: "Registration unsuccessful",
-          statusCode: 422,
-          error: error.message
-        });
+        if (error.type === "validation") {
+          res.status(422).json({
+            errors: error.errors
+          });
+        } else {
+          res.status(500).json({
+            status: "error",
+            message: "Registration unsuccessful",
+            error: error.message
+          });
+        }
       }
-};
+    }
 
 module.exports = registerUser;

@@ -36,8 +36,31 @@ const registerUserService = async (userData) => {
   const validEmail = isEmail(email);
   const itIsString = isItString(checkType);
 
-  if (validationResult.length > 0 || !validEmail || itIsString === false) {
-    throw new Error('Invalid input fields');
+  if (validationResult.length > 0) {
+    throw {
+      type: "validation",
+      errors: validationResult
+    };
+  }
+
+  if (!validEmail) {
+    throw {
+      type: "validation",
+      errors: [
+        {
+          field: "email",
+          message: "Invalid email"
+        },
+      ]
+    };
+  }
+
+  if (itIsString.status !== true) {
+    console.log(itIsString);
+    throw {
+      type: "validation",
+      errors: itIsString.errors
+    };
   }
 
   // Check if email is already used

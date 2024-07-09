@@ -10,12 +10,22 @@ const emptyFieldsValidate = (fields) => {
 
 const isItString = (fields) => {
     let status = true;
+    const errors = [];
+    
     fields.forEach(({ field, value }) => {
-        if (typeof(value) !=='string') {
-            status = false
-        }
+      if (typeof(value) !== 'string') {
+        console.log(typeof(value));
+        errors.push({ field, message: `${field} must be a string` });
+        status = false;
+      }
     });
-    return status;
-}
+  
+    if (status === false) {
+      console.log(errors);
+    }
+  
+    return { status, errors };
+  };
+  
 
 module.exports = {emptyFieldsValidate, isItString};
