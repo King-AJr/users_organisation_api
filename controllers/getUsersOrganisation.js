@@ -1,4 +1,6 @@
-
+const { getRepository } = require('typeorm');
+const User = require('../db/entity/User');
+const Organisation = require('../db/entity/organisations');
 
 /**
  * Get all organizations where the user is a member
@@ -10,9 +12,10 @@ const getUserOrganizations = async (req, res) => {
 
     try {
         // Retrieve the user's organisations
-        const user = await prisma.user.findUnique({
+        const userRepository = getRepository(User);
+        const user = await userRepository.findOne({
             where: { userId: userId },
-            select: { organisations: true },
+            relations: ['organisations'],
         });
 
         if (!user) {
@@ -24,9 +27,7 @@ const getUserOrganizations = async (req, res) => {
         }
 
         // Retrieve organisation details for the user's organisations
-        const organisations = await prisma.organisation.findMany({
-            where: { orgId: { in: user.organisations } },
-        });
+        const organisations = user.organisations;
 
         res.status(200).json({
             status: "Success",

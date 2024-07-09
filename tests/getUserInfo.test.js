@@ -1,7 +1,14 @@
+const getUserInfo = require('../controllers/getUserInfo');
+const { getRepository } = require('typeorm');
+const User = require('../db/entity/User');
 
-const  getUserInfo = require('../controllers/getUserInfo');
-
-jest.mock('../db/prisma');
+jest.mock('typeorm', () => {
+    const originalModule = jest.requireActual('typeorm');
+    return {
+        ...originalModule,
+        getRepository: jest.fn(),
+    };
+});
 
 describe('getUserInfo', () => {
     it('should return 403 if users are not in the same organization', async () => {
@@ -15,19 +22,25 @@ describe('getUserInfo', () => {
             json: jest.fn(),
         };
 
-        // Mock prisma responses
-        prisma.User.findUnique
+        const mockUserRepo = {
+            findOne: jest.fn(),
+        };
+
+        getRepository.mockReturnValue(mockUserRepo);
+
+        // Mock TypeORM repository responses
+        mockUserRepo.findOne
             .mockResolvedValueOnce({
                 userId: 1,
                 firstName: 'John',
                 lastName: 'Doe',
                 email: 'john@example.com',
                 phone: '1234567890',
-                organisations: [1],
+                organisations: [{ id: 1 }],
             })
             .mockResolvedValueOnce({
                 userId: 2,
-                organisations: [2],
+                organisations: [{ id: 2 }],
             });
 
         // Call the controller
@@ -41,6 +54,4 @@ describe('getUserInfo', () => {
             statusCode: 403,
         });
     });
-
-    // Additional test cases...
 });

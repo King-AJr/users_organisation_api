@@ -1,6 +1,8 @@
-require('dotenv').config(); // Ensure this line is at the top of your entry file
+require('dotenv').config(); 
+const { getRepository } = require("typeorm");
 
 const jwt = require('jsonwebtoken');
+const User = require("../db/entity/User");
 
 const getTokenFromHeader = require('../utils/getTokenFromHeader');
 
@@ -16,6 +18,8 @@ const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
     const token = getTokenFromHeader(authHeader);
 
+    const userRepository = getRepository(User);
+
 
     if (!token) {
         return res.status(401).json({
@@ -29,9 +33,7 @@ const authenticateToken = async (req, res, next) => {
         const user = jwt.verify(token, process.env.APP_SECRET);
 
         // Check if the user exists in the database
-        const dbUser = await prisma.user.findUnique({
-            where: { email: user.email }
-        });
+        const dbUser = await userRepository.findOne({ where: { email: user.email } });
 
         if (!dbUser) {
             return res.status(403).json({

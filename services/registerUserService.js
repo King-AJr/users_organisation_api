@@ -72,7 +72,6 @@ const registerUserService = async (userData) => {
 
   await userRepository.save(newUser);
 
-  console.log(newUser);
 
   const token = createToken(newUser);
 

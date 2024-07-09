@@ -1,20 +1,36 @@
 const request = require('supertest');
 const app = require('../server');
-const prisma = require('../db/prisma');
+const { createConnection, getConnection, getRepository } = require('typeorm');
+const User = require('../db/entity/User');
+const organisation = require('../db/entity/organisations');
+
+jest.setTimeout(20000);
 
 describe('POST /auth/register', () => {
     beforeAll(async () => {
-        await prisma.$connect();
+        await createConnection({
+            type: 'postgres',
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            username: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            entities: [User, organisation],
+            synchronize: true,
+        });
     });
 
     afterAll(async () => {
-        await prisma.$disconnect();
+        const connection = getConnection();
+        await connection.close();
     });
 
     afterEach(async () => {
         // Clean up the database after each test
-        await prisma.User.deleteMany({});
-        await prisma.organisation.deleteMany({});
+        const userRepository = getRepository(User);
+        const organisationRepository = getRepository(organisation);
+        await userRepository.delete({});
+        await organisationRepository.delete({});
     });
 
     it('Should Register User Successfully with Default Organisation', async () => {
@@ -38,9 +54,8 @@ describe('POST /auth/register', () => {
         expect(response.body.data).toHaveProperty('accessToken');
 
         // Check if the default organisation was created
-        const org = await prisma.organisation.findFirst({
-            where: { name: "John's Organisation" },
-        });
+        const organisationRepository = getRepository(Organisation);
+        const org = await organisationRepository.findOne({ where: { name: "John's Organisation" } });
         expect(org).not.toBeNull();
     });
 

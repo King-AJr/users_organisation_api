@@ -27,10 +27,10 @@ const getUserInfo = async (req, res) => {
       });
     } else {
       console.error('Error fetching user information:', error);
-      return res.status(500).json({
-        status: "Internal server error",
-        message: 'Error fetching user information',
-        error: error.message,
+      return res.status(403).json({
+        status: "Bad request",
+        message: error.message,
+        statusCode: 403,
       });
     }
   }

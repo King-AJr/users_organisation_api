@@ -28,10 +28,10 @@ const addUserToOrganisation = async (req, res) => {
         statusCode: 404
       });
     } else {
-      res.status(500).json({
-        status: "Internal Server Error",
-        message: "An error occurred while adding user to organization",
-        error: error.message
+      res.status(404).json({
+        status: "Bad request",
+        message: error.message,
+        statusCode: 404
       });
     }
   }

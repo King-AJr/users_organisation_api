@@ -1,8 +1,8 @@
 // services/authService.js
 
-const bcrypt = require('bcrypt');
-const checkEmailExists = require('../utils/checkEmailExist');
-const createToken = require('../utils/createToken');
+const bcrypt = require("bcrypt");
+const checkEmailExists = require("../utils/checkEmailExist");
+const createToken = require("../utils/createToken");
 
 /**
  * Authenticates a user based on email and password
@@ -20,7 +20,7 @@ const loginService = async (email, password) => {
     const isMatch = await bcrypt.compare(password, userInfo.password);
 
     if (!isMatch) {
-      throw new Error('Authentication failed');
+      throw new Error("Authentication failed");
     }
 
     // Create a token
@@ -37,8 +37,8 @@ const loginService = async (email, password) => {
       },
     };
   } catch (error) {
-    throw new Error(`Authentication failed: ${error.message}`);
+    throw new Error(`${error.message}`);
   }
 };
 
-module.exports = loginService
+module.exports = loginService;

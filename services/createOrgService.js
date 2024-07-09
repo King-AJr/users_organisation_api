@@ -1,4 +1,6 @@
-
+// services/createOrgService.js
+const { getRepository } = require("typeorm");
+const Organisation = require("../db/entity/organisations");
 const { emptyFieldsValidate, isItString } = require('../utils/emptyFields');
 
 /**
@@ -21,6 +23,7 @@ const createOrgService = async (userData, name, description) => {
       { field: 'description', value: description }
     ]);
 
+
     if (validationResult.length > 0 || !itIsString) {
       throw new Error('Validation failed');
     }
@@ -31,12 +34,14 @@ const createOrgService = async (userData, name, description) => {
     }
 
     // Create organisation in database
-    const newOrganisation = await prisma.organisation.create({
-      data: {
-        name: name,
-        description: description
-      }
+    const organisationRepository = getRepository(Organisation);
+    const newOrganisation = organisationRepository.create({
+      name,
+      description
     });
+  
+
+    await organisationRepository.save(newOrganisation);
 
     return newOrganisation;
   } catch (error) {

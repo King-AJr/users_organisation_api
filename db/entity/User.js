@@ -27,7 +27,7 @@ module.exports = new EntitySchema({
     }
   },
   relations: {
-    organisation: {
+    organisations: {
       type: "many-to-many",
       target: "organisation",
       joinTable: {

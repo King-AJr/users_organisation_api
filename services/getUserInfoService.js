@@ -1,4 +1,6 @@
-
+// services/getUserInfoService.js
+const { getRepository } = require("typeorm");
+const User = require("../db/entity/User");
 
 /**
  * Get user information if they are in the same organisation as the requesting user
@@ -9,40 +11,35 @@
  */
 const getUserInfoService = async (userId, requestingUserId) => {
   try {
+    const userRepository = getRepository(User);
+
     // Retrieve the requested user's information
-    const user = await prisma.User.findUnique({
-      where: { userId: userId },
-      select: {
-        userId: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        organisation: true,
-      },
+    const user = await userRepository.findOne({
+      where: { userId },
+      relations: ["organisations"],
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     // Retrieve the requesting user's information
-    const requester = await prisma.User.findUnique({
+    const requester = await userRepository.findOne({
       where: { userId: requestingUserId },
-      select: {
-        organisation: true,
-      },
+      relations: ["organisations"],
     });
 
     if (!requester) {
-      throw new Error('Requesting user not found or access denied');
+      throw new Error("Requesting user not found or access denied");
     }
 
     // Check for any overlapping organizations
-    const isSameOrg = user.organisation.some(orgId => requester.organisation.includes(orgId.toString()));
+    const isSameOrg = user.organisations.some(org =>
+      requester.organisations.some(reqOrg => reqOrg.orgId === org.orgId)
+    );
 
     if (!isSameOrg) {
-      throw new Error('Access denied: Users are not in the same organization');
+      throw new Error("Access denied: Users are not in the same organization");
     }
 
     return {

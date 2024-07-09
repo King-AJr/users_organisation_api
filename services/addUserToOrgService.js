@@ -1,3 +1,8 @@
+// services/addUserToOrgService.js
+const { getRepository } = require("typeorm");
+const User = require("../db/entity/User");
+const Organisation = require("../db/entity/organisations");
+
 /**
  * Add a user to an organisation
  * @param {number} userId - ID of the user to add
@@ -7,46 +12,41 @@
  */
 const addUserToOrgService = async (userId, orgId, requesterUserId) => {
   try {
-    // Check if the user exists
-    const user = await prisma.User.findUnique({
-      where: {
-        userId: parseInt(userId)
-      }
-    });
+    const userRepository = getRepository(User);
+    const organisationRepository = getRepository(Organisation);
 
+    // Find the user
+    const user = await userRepository.findOne({ where: { userId }, relations: ["organisations"] });
     if (!user) {
       throw new Error("User not found");
     }
 
-    // Retrieve the requesting user's information
-    const reqUser = await prisma.User.findUnique({
-      where: {
-        userId: requesterUserId
-      }
-    });
-
-    // Retrieve the organisation
-    const organisation = await prisma.organisation.findUnique({
-      where: { orgId: parseInt(orgId) }
-    });
-
+    // Find the organisation
+    const organisation = await organisationRepository.findOne({ where: { orgId }, relations: ["users"] });
     if (!organisation) {
       throw new Error("Organisation not found");
     }
 
-    // Check if the requesting user is part of the organisation
-    if (!reqUser.organisation.includes(orgId.toString())) {
+    // Find the requesting user
+    const reqUser = await userRepository.findOne({ where: { userId: requesterUserId }, relations: ["organisations"] });
+    if (!reqUser) {
+      throw new Error("Requesting user not found");
+    }
+
+    // Check if the requester is part of the organisation
+    const isRequesterPartOfOrg = reqUser.organisations.some(org => org.orgId === orgId);
+    if (!isRequesterPartOfOrg) {
       throw new Error("Requesting user is not part of this organisation");
     }
 
-    // Append the new user ID to the organisation's users array
-    const updatedOrganisations = [...user.organisation, parseInt(orgId)];
+    // Add the organisation to the user's list of organisations
+    if (!user.organisations) {
+      user.organisations = [];
+    }
+    user.organisations.push(organisation);
 
-    // Update the user with the new organisation array
-    await prisma.User.update({
-      where: { userId: parseInt(userId) },
-      data: { organisation: { set: updatedOrganisations } },
-    });
+    // Save changes
+    await userRepository.save(user);
 
     return true;
   } catch (error) {

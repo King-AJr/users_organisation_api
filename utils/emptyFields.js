@@ -9,7 +9,7 @@ const emptyFieldsValidate = (fields) => {
 };
 
 const isItString = (fields) => {
-    let status;
+    let status = true;
     fields.forEach(({ field, value }) => {
         if (typeof(value) !=='string') {
             status = false
