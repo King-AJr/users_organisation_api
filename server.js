@@ -32,6 +32,8 @@ initializeDatabase().then(() => {
         res.status(404).json({ error: 'Ooops that endpoint does not exist' });
     });
 
+   
+
   
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

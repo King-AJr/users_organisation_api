@@ -6,6 +6,9 @@ const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginController);
+router.get('/cron', (req, res) => {
+    res.send('keep running');
+})
 
 
 

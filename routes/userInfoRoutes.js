@@ -7,4 +7,5 @@ const router = express.Router();
 router.get('/:id', authenticateToken, getUserInfo);
 
 
+
 module.exports = router;
