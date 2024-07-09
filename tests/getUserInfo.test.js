@@ -14,8 +14,8 @@ describe('getUserInfo', () => {
     it('should return 403 if users are not in the same organization', async () => {
         // Mock the request and response objects
         const req = {
-            params: { id: '1' },
-            user: { userId: 2 },
+            params: { id: '2' },
+            user: { userId: 3 },
         };
         const res = {
             status: jest.fn().mockReturnThis(),
